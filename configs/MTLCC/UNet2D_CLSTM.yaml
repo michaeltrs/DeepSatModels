@@ -1,0 +1,41 @@
+MODEL:
+  architecture: "UNET2D-CLSTM"
+  train_stage: 2
+  shape_pattern: 'NTHWC'
+  img_res: 24
+  max_seq_len: 16
+  num_channels: 15
+  num_classes: 18
+  dropout: 0.
+
+DATASETS:
+  train:
+    dataset: 'MTLCC'
+    max_seq_len: 16
+    batch_size: 32
+    extra_data:
+    num_workers: 4
+  eval:
+    dataset: 'MTLCC'
+    max_seq_len: 16
+    batch_size: 32
+    extra_data:
+    num_workers: 4
+SOLVER:
+  num_epochs: 300
+  loss_function: masked_cross_entropy
+  class_weights:
+  lr_scheduler:
+  lr_base: 0.0001
+  lr_decay: 0.975
+  reset_lr: True   # resets lr to base value when loading pretrained model
+  reset_lr_at_epoch: 150
+
+CHECKPOINT:
+  load_from_checkpoint:
+  restart_clock: True
+  partial_restore: True
+  save_path: "models/saved_models/MTLCC/UNET2D_CLSTM_stage2"
+  train_metrics_steps: 2000
+  eval_steps: 4000
+  save_steps: 8000

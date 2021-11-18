@@ -1,0 +1,9 @@
+
+source activate /home/croptype
+
+conda install -c conda-forge matplotlib 
+conda install -c conda-forge rasterio
+conda install -c anaconda scikit-learn 
+conda install -c conda-forge keras 
+conda install -c conda-forge visdom
+

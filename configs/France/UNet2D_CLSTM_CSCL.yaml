@@ -1,0 +1,50 @@
+MODEL:
+  architecture: "UNET2D-CLSTM"
+  train_stage: 0
+  shape_pattern: 'NTHWC'
+  img_res: 48
+  max_seq_len: 16
+  num_channels: 14
+  num_classes: 20
+  dropout: 0.
+  attn_channels: 128
+  norm_emb: True
+  attn_groups: 1
+  cscl_win_size: 3
+  cscl_win_stride: 1
+  cscl_win_dilation: 1
+
+DATASETS:
+  train:
+    dataset: 'T31TFM_1618'
+    label_map:  "labels_20k2k"
+    max_seq_len: 16
+    batch_size: 32
+    extra_data: ['cscl_labels']
+    num_workers: 4
+  eval:
+    dataset: 'T31TFM_1618'
+    label_map:  "labels_20k2k"
+    max_seq_len: 16
+    batch_size: 32
+    extra_data: ['cscl_labels']
+    num_workers: 4
+
+SOLVER:
+  num_epochs: 50
+  steps: (0, 80000)
+  loss_function: contrastive_loss
+  pos_weight: 0.125
+  lr_scheduler:
+  lr_base: 0.0001
+  lr_decay: 0.975
+  reset_lr: False
+  weight_decay: 0.0
+
+CHECKPOINT:
+  load_from_checkpoint:
+  partial_restore: False
+  save_path: "models/saved_models/France/UNET2D_CLSTM_CSCL"
+  train_metrics_steps: 2000
+  eval_steps: 4000
+  save_steps: 8000

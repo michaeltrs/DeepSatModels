@@ -1,0 +1,9 @@
+MTLCC:
+    basedir: "/vol/deform/mat10/Data/Satellite/MTLCC"
+    paths_train: "/vol/deform/mat10/Data/Satellite/MTLCC/data_IJGI18/datasets/full/240pkl/train_paths_16.csv"
+    paths_eval: "/vol/deform/mat10/Data/Satellite/MTLCC/data_IJGI18/datasets/full/240pkl/eval_paths_16.csv"
+
+T31TFM_1618:
+    basedir: "/vol/deform/mat10/Data/Satellite/France/PSETAE_repl"
+    paths_train: "/vol/deform/mat10/Data/Satellite/France/PSETAE_repl/paths/100_3/train_paths.csv"
+    paths_eval: "/vol/deform/mat10/Data/Satellite/France/PSETAE_repl/paths/100_3/eval_paths.csv"
