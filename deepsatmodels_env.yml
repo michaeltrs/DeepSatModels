@@ -123,3 +123,4 @@ dependencies:
     - werkzeug==1.0.1
     - wrapt==1.12.1
     - yapf==0.30.0
+    - einops==0.3.2

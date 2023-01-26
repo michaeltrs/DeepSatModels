@@ -1,0 +1,54 @@
+MODEL:
+  architecture:  "TSViT"
+  img_res: 24
+  max_seq_len: 16  #
+  num_channels: 14
+  num_features: 16
+  num_classes: 17  # 18
+  ignore_background: True
+  dropout: 0.
+  patch_size: 2
+  dim: 128
+  temporal_depth: 4
+  spatial_depth: 4
+  heads: 4
+  pool: 'cls'
+  dim_head: 64
+  emb_dropout: 0.
+  scale_dim: 4
+
+DATASETS:
+  train:
+    dataset: "MTLCC"
+    max_seq_len: 16
+    batch_size: 32
+    extra_data:
+    num_workers: 4
+  eval:
+    dataset: "MTLCC"
+    max_seq_len: 16
+    batch_size: 32
+    extra_data:
+    num_workers: 4
+
+SOLVER:
+  num_epochs: 150
+  num_warmup_epochs: 10
+  steps: (0, 80000)
+  loss_function:  masked_cross_entropy
+  class_weights:
+  lr_scheduler: 'cosine'
+  lr_base: 1e-3
+  lr_min: 5e-4
+  lr_start: 1e-8
+  num_cycles: 1
+  reset_lr: True   # resets lr to base value when loading pretrained model
+  weight_decay: 0.000
+
+CHECKPOINT:
+  load_from_checkpoint:
+  partial_restore: False
+  save_path: 'models/saved_models/MTLCC/TSViT'
+  train_metrics_steps: 250
+  eval_steps: 2000
+  save_steps: 1000000

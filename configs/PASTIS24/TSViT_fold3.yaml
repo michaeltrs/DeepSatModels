@@ -1,0 +1,65 @@
+MODEL:
+  architecture:  "TSViT"
+  img_res: 24
+  max_seq_len: 60
+  num_channels: 11
+  num_features: 16
+  num_classes: 19
+  ignore_background: False
+  dropout: 0.
+  patch_size: 2
+  dim: 128
+  temporal_depth: 4
+  spatial_depth: 4
+  heads: 4
+  pool: 'cls'
+  dim_head: 32
+  emb_dropout: 0.
+  scale_dim: 4
+
+DATASETS:
+  train:
+    dataset: "PASTIS24_fold3"
+    label_map:
+    max_seq_len: 60
+    batch_size: 16
+    extra_data:
+    num_workers: 4
+
+  eval:
+    dataset: "PASTIS24_fold3"
+    label_map:
+    max_seq_len: 60
+    batch_size: 24
+    extra_data:
+    num_workers: 4
+
+  test:
+    dataset: "PASTIS24_fold3"
+    label_map:
+    max_seq_len: 60
+    batch_size: 24
+    extra_data:
+    num_workers: 4
+
+SOLVER:
+  num_epochs: 100
+  num_warmup_epochs: 10
+  steps: (0, 80000)
+  loss_function:  masked_cross_entropy
+  class_weights:
+  lr_scheduler: 'cosine'
+  lr_base: 1e-3
+  lr_min: 5e-6
+  lr_start: 1e-8
+  num_cycles: 1
+  reset_lr: True   # resets lr to base value when loading pretrained model
+  weight_decay: 0.000
+
+CHECKPOINT:
+  load_from_checkpoint:
+  partial_restore: False
+  save_path: 'models/saved_models/PASTIS24/TSViT_fold3'
+  train_metrics_steps: 250
+  eval_steps: 2000
+  save_steps: 20000000000

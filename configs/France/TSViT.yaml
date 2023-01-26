@@ -1,0 +1,57 @@
+MODEL:
+  architecture:  "TSViT"
+  img_res: 48
+  max_seq_len: 16  #
+  num_channels: 14
+  num_features: 16
+  num_classes: 20
+  ignore_background: True
+  dropout: 0.
+  patch_size: 3
+  dim: 128
+  temporal_depth: 8
+  spatial_depth: 4
+  heads: 4
+  pool: 'cls'
+  dim_head: 64
+  emb_dropout: 0.
+  scale_dim: 4
+
+DATASETS:
+  train:
+    dataset: "T31TFM_1618"
+    label_map: "labels_20k2k"
+    max_seq_len: 16
+    batch_size: 14
+    extra_data:
+    num_workers: 4
+
+  eval:
+    dataset: "T31TFM_1618"
+    label_map: "labels_20k2k"
+    max_seq_len: 16
+    batch_size: 16
+    extra_data:
+    num_workers: 4
+
+SOLVER:
+  num_epochs: 100
+  num_warmup_epochs: 10
+  steps: (0, 80000)
+  loss_function:  masked_cross_entropy
+  class_weights:
+  lr_scheduler: 'cosine'
+  lr_base: 1e-4
+  lr_min: 5e-6
+  lr_start: 1e-8
+  num_cycles: 1
+  reset_lr: True   # resets lr to base value when loading pretrained model
+  weight_decay: 0.000
+
+CHECKPOINT:
+  load_from_checkpoint:
+  partial_restore: False
+  save_path: 'models/saved_models/France/TSViT'
+  train_metrics_steps: 1000
+  eval_steps: 4000
+  save_steps: 1000000

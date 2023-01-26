@@ -1,0 +1,59 @@
+MODEL:
+  architecture:  "TSViTcls"
+  img_res: 24
+  max_seq_len: 60  #
+  num_channels: 11
+  num_features: 16
+  num_classes: 19
+  ignore_background: True
+  dropout: 0.
+  patch_size: 3
+  dim: 128
+  temporal_depth: 8
+  spatial_depth: 4
+  heads: 4
+  pool: 'cls'
+  dim_head: 64
+  emb_dropout: 0.
+  scale_dim: 4
+
+DATASETS:
+  train:
+    dataset: 'PASTIS24_cls'
+    label_map:
+    max_seq_len: 60
+    batch_size: 32
+    extra_data:
+    num_workers: 4
+
+  eval:
+    dataset: 'PASTIS24_cls'
+    label_map:
+    max_seq_len: 60
+    batch_size: 32
+    extra_data:
+    num_workers: 4
+
+SOLVER:
+  num_epochs: 100
+  num_warmup_epochs: 10
+  steps: (0, 80000)
+  loss_function: focal_loss
+  class_weights:
+  lr_scheduler:
+  lr_base: 1e-3
+  lr_min: 5e-6
+  lr_start: 1e-8
+  num_cycles: 1
+  reset_lr: True   # resets lr to base value when loading pretrained model
+  weight_decay: 0.00
+  gamma: 1.0
+  alpha:
+
+CHECKPOINT:
+  load_from_checkpoint:
+  partial_restore: False
+  save_path: 'models/saved_models/PASTIS24/TSViTcls'
+  train_metrics_steps: 1000
+  eval_steps: 1000
+  save_steps: 1000000
