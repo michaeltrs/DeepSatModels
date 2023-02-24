@@ -40,8 +40,9 @@ Run the following to train TSViT on each of the five folds of PASTIS24
 ### Pre-trained checkpoints
 Download 5-fold PASTIS24 [pre-trained models and tensorboard files](https://drive.google.com/file/d/1AzWEtHxojuCjaIsekja4J54LuEb9e7kw/view?usp=share_link).
 
+
 ## Reference
-Please consider citing the following work if you use TSViT or code from this repository in your project: 
+Please cite the following work if you use any data or code from this repository in your project: 
 ```
 @misc{https://doi.org/10.48550/arxiv.2301.04944,
   doi = {10.48550/ARXIV.2301.04944},
@@ -54,3 +55,15 @@ Please consider citing the following work if you use TSViT or code from this rep
   copyright = {Creative Commons Attribution 4.0 International}
 }
 ```
+
+If you use PASTIS24 please also cite this paper: 
+
+@InProceedings{Garnot_2021_ICCV,
+    author    = {Garnot, Vivien Sainte Fare and Landrieu, Loic},
+    title     = {Panoptic Segmentation of Satellite Image Time Series With Convolutional Temporal Attention Networks},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2021},
+    pages     = {4872-4881}
+}
+
