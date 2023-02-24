@@ -57,7 +57,7 @@ Please cite the following work if you use any data or code from this repository 
 ```
 
 If you use PASTIS24 please also cite this paper: 
-
+```
 @InProceedings{Garnot_2021_ICCV,
     author    = {Garnot, Vivien Sainte Fare and Landrieu, Loic},
     title     = {Panoptic Segmentation of Satellite Image Time Series With Convolutional Temporal Attention Networks},
@@ -66,4 +66,5 @@ If you use PASTIS24 please also cite this paper:
     year      = {2021},
     pages     = {4872-4881}
 }
+```
 
