@@ -17,7 +17,7 @@ crop distributions, spanning over 4000 km<sup>2</sup> and including 18 crop type
 size 128x128, each containing 33-61 acquisitions and 10 image bands. Because the PASTIS sample size is too 
 large for efficiently training TSViT with consumer gpus, we split each sample into 24x24 patches and retain 
 all acquisition times for a total of 60k samples. We further refer to these data as PASTIS24. 
-Data with train, evaluation and test splits can be downloaded from [here](https://drive.google.com/file/d/1Av9hou8DviCJsEB9a_XU9SyqTuNxVpdE/view?usp=share_link). 
+Data with train, evaluation and test splits can be downloaded from [here](https://drive.google.com/drive/folders/1Lm0repzD_1NVcECsrwF8Q3bP2XEp2a0y). 
 Unzipping in place will create the following folder tree.
 ```bash
 PASTIS24
