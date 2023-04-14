@@ -5,7 +5,6 @@ from data.France.dataloader import get_dataloader as get_france_dataloader
 from data.France.data_transforms import France_segmentation_transform
 from data.PASTIS24.dataloader import get_dataloader as get_pastis_dataloader
 from data.PASTIS24.data_transforms import PASTIS_segmentation_transform
-from utils.tensor_utils import resize_match2d
 from utils.config_files_utils import get_params_values, read_yaml
 
 
@@ -14,7 +13,6 @@ DATASET_INFO = read_yaml("data/datasets.yaml")
 
 def get_dataloaders(config):
 
-    # IMPLEMENTED_DATASETS = list(DATASET_INFO.keys())
 
     model_config = config['MODEL']
     train_config = config['DATASETS']['train']
@@ -68,8 +66,7 @@ def get_model_data_input(config):
     
     def unidir_segmentation_inputs(sample, device):
         inputs = sample['inputs'].to(device)
-        #seq_lengths = sample['seq_lengths'].to(device)
-        return inputs  # seq_lengths
+        return inputs
     
     def bidir_segmentation_inputs(sample, device):
         inputs = sample['inputs'].to(device)

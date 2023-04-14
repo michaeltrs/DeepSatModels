@@ -5,7 +5,7 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from train_and_eval.utils.lr_scheduler import build_scheduler
+# from train_and_eval.utils.lr_scheduler import build_scheduler
 from torch.utils.tensorboard import SummaryWriter
 import numpy as np
 import os
@@ -17,7 +17,6 @@ from metrics.torch_metrics import get_mean_metrics
 from metrics.numpy_metrics import get_classification_metrics, get_per_class_loss
 from metrics.loss_functions import get_loss
 from utils.summaries import write_mean_summaries, write_class_summaries
-from data import get_model_data_input, get_loss_data_input
 
 
 def mIou(y_true, y_pred, n_classes):
@@ -209,7 +208,6 @@ if __name__ == "__main__":
 
     config = read_yaml(config_file)
     config['local_device_ids'] = device_ids
-    config['CHECKPOINT']['machine'] = machine
 
     center = config['MODEL']['img_res'] // 2
     dataloaders = get_dataloaders(config)

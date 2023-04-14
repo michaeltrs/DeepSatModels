@@ -121,7 +121,6 @@ class ConvLSTM(nn.Module):
         -------
         last_state_list, layer_output
         """
-        # input_tensor = inputs["inputs"]
 
         # Desired shape for tensor in NTCHW
         if self.shape_pattern is "NTHWC":
@@ -199,7 +198,3 @@ if __name__ == "__main__":
                      device=device).to(device)
     input_tensor = torch.rand((10, 12, 20, 48, 48)).to(device)
     out = model(input_tensor)
-
-# iter = model.parameters()
-# for par in iter:
-#    print(par.shape, par.device)

@@ -24,7 +24,7 @@ DATASETS:
     num_workers: 4
 
 SOLVER:
-  num_epochs: 75
+  num_epochs: 50
   loss_function: masked_cross_entropy
   class_weights:
   lr_scheduler:

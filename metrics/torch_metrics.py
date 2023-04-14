@@ -4,16 +4,13 @@ import numpy as np
 
 
 def get_binary_metrics(logits, labels, return_all=False, thresh=0.5, name=""):
-    logits = logits.reshape(-1, 1)#.cpu()
-    #labels = labels.cpu()
+    logits = logits.reshape(-1, 1)
     probs = torch.nn.functional.sigmoid(logits)
     pred = (probs > thresh).to(torch.float32)
     labels = labels.reshape(-1, 1)
     bin_metrics = get_classification_metrics(
         predicted=pred.cpu().numpy(), labels=labels.cpu().numpy(), n_classes=2)
     acc, precision, recall, F1, IOU = bin_metrics['micro']
-    #print("batch_iou: %.4f, batch accuracy: %.4f, batch precision: %.4f,  batch recall: %.4f, batch F1: %.4f" %
-    #      (IOU, acc, precision, recall, F1))
     if return_all:
         micro_metrics = {}
         for metrics_type in ['micro']:
@@ -38,8 +35,8 @@ def get_mean_metrics(logits, labels, n_classes, loss, epoch=0, step=0, unk_masks
     """
     :param logits: (N, D, H, W)
     """
-    _, predicted = torch.max(logits.data, 1)  # .cpu().numpy()
-    unique_predictions = predicted.unique().cpu().numpy()
+    _, predicted = torch.max(logits.data, 1)
+    # unique_predictions = predicted.unique().cpu().numpy()
     predicted = predicted.reshape(-1).cpu().numpy()
     labels = labels.reshape(-1).cpu().numpy()
     if unk_masks is not None:
@@ -47,9 +44,6 @@ def get_mean_metrics(logits, labels, n_classes, loss, epoch=0, step=0, unk_masks
     acc, precision, recall, F1, IOU = get_classification_metrics(
         predicted, labels, n_classes, unk_masks)['micro']
     loss_ = float(loss.detach().cpu().numpy())
-    #print("epoch: %d, step: %5d, loss: %.7f, batch_iou: %.4f, batch accuracy: %.4f, batch precision: %.4f, "
-    #      "batch recall: %.4f, batch F1: %.4f, unique pred labels: %s" %
-    #      (epoch, step + 1, loss_, IOU, acc, precision, recall, F1, unique_predictions))
     return {"%sAccuracy" % name: acc, "%sPrecision" % name: precision, "%sRecall" % name: recall,
             "%sF1" % name: F1, "%sIOU" % name: IOU, "%sLoss" % name: loss_}
 
@@ -58,8 +52,6 @@ def get_all_metrics(predicted, labels, n_classes, unk_masks=None, name=""):
     """
     :param logits: (N, D, H, W)
     """
-    #_, predicted = torch.max(logits.data, 1)  # .cpu().numpy()
-    #unique_predictions = predicted.unique().cpu().numpy()
     predicted = predicted.reshape(-1).cpu().numpy()
     labels = labels.reshape(-1).cpu().numpy()
     if unk_masks is not None:
@@ -79,7 +71,6 @@ def get_all_metrics(predicted, labels, n_classes, unk_masks=None, name=""):
         class_metrics['%s%s_Recall' % (name, metrics_type)] = cls_metrics[metrics_type][2]
         class_metrics['%s%s_F1' % (name, metrics_type)] = cls_metrics[metrics_type][3]
         class_metrics['%s%s_IOU' % (name, metrics_type)] = cls_metrics[metrics_type][4]
-    #metrics['unique_predictions'] = unique_predictions
     return micro_metrics, class_metrics
 
 
@@ -87,8 +78,6 @@ def accuracy(logits, labels, unk_masks):
     _, predicted = torch.max(logits, -1)
     is_correct = (predicted == labels)[unk_masks].type(torch.float32)
     acc = is_correct.mean().item()
-    # num_total = is_correct.shape[0]
-    # num_correct = is_correct.sum().item()
     return acc
 
 

@@ -1,24 +1,20 @@
 MTLCC:
-    basedir: "/vol/deform/mat10/Data/Satellite/MTLCC"
-    paths_train: "/vol/deform/mat10/Data/Satellite/MTLCC/data_IJGI18/datasets/full/240pkl/train_paths_16.csv"
-    paths_eval: "/vol/deform/mat10/Data/Satellite/MTLCC/data_IJGI18/datasets/full/240pkl/eval_paths_16.csv"
+    basedir: "..."
+    paths_train: ".../240pkl/train_paths.csv"
+    paths_eval: ".../240pkl/eval_paths.csv"
 
 T31TFM_1618:
-    basedir: "/vol/deform/mat10/Data/Satellite/France/PSETAE_repl"
-    paths_train: "/vol/deform/mat10/Data/Satellite/France/PSETAE_repl/paths/100_3/train_paths.csv"
-    paths_eval: "/vol/deform/mat10/Data/Satellite/France/PSETAE_repl/paths/100_3/eval_paths.csv"
+    basedir: "..."
+    paths_train: ".../train_paths.csv"
+    paths_eval: ".../eval_paths.csv"
 
 # PASTIS24 benchmark -------------------------------------------------------------------------------------------------
 PASTIS24_fold1:
-    basedir: "/media/michaeltrs/0a8a5a48-ede5-47d0-8eff-10d11350bf98/Satellite_Data/PASTIS24"
-    paths_train: "/media/michaeltrs/0a8a5a48-ede5-47d0-8eff-10d11350bf98/Satellite_Data/PASTIS24/fold-paths/folds_1_123_paths.csv"
-    paths_eval: "/media/michaeltrs/0a8a5a48-ede5-47d0-8eff-10d11350bf98/Satellite_Data/PASTIS24/fold-paths/fold_4_paths.csv"
-    paths_test: "/media/michaeltrs/0a8a5a48-ede5-47d0-8eff-10d11350bf98/Satellite_Data/PASTIS24/fold-paths/fold_5_paths.csv"
-#    PASTIS24_fold1:
-#        basedir: ".../PASTIS24"
-#        paths_train: ".../fold-paths/folds_1_123_paths.csv"
-#        paths_eval: ".../fold-paths/fold_4_paths.csv"
-#        paths_test: ".../fold-paths/fold_5_paths.csv"
+    PASTIS24_fold1:
+        basedir: ".../PASTIS24"
+        paths_train: ".../fold-paths/folds_1_123_paths.csv"
+        paths_eval: ".../fold-paths/fold_4_paths.csv"
+        paths_test: ".../fold-paths/fold_5_paths.csv"
 
 PASTIS24_fold2:
     basedir: ".../PASTIS24"

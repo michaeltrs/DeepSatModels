@@ -14,8 +14,6 @@ class ContextSelfSimilarity(nn.Module):
         self.stride = stride
         self.dilation = dilation
 
-        # assert self.stride % self.dilation == 0, "CSSL stride should be integer multiple of dilation rate for special case to work"
-        # self.final_stride = int(self.stride / self.dilation)
         # assert self.final_stride >= 1.0, "CSSL stride should be geq to dilation rate for special case to work"
         if self.stride >= self.dilation:
             assert self.stride % self.dilation == 0, \
@@ -37,11 +35,6 @@ class ContextSelfSimilarity(nn.Module):
         self.groups = groups
         self.norm_emb = norm_emb
         self.sigmoid_sim = sigmoid_sim
-        # self.dilated_kernel_size = (kernel_size - 1) * dilation + 1
-        # self.padding = self.dilated_kernel_size // 2
-        # self.padding = kernel_size // 2
-
-        # self.center_idx = kernel_size // 2
 
         assert self.attn_channels % self.groups == 0, "attn_channels should be divided by groups. (example: out_channels: 40, groups: 4)"
 
@@ -50,8 +43,6 @@ class ContextSelfSimilarity(nn.Module):
 
         self.key_conv = nn.Conv2d(in_channels, attn_channels, kernel_size=1, bias=bias)
         self.query_conv = nn.Conv2d(in_channels, attn_channels, kernel_size=1, bias=bias)
-
-        # self.reset_parameters()
 
     def forward(self, x):
         x = x[:, :, ::self.first_stride, ::self.first_stride]
@@ -125,13 +116,10 @@ class AttentionAggregate(ContextSelfSimilarity):
         b, h, w, hs, ws = s.shape
         s = F.softmax(s.reshape(b, h, w, -1), dim=-1).unsqueeze(-1)
         x = x[:, :, ::self.dilation, ::self.dilation]
-        # print("x: ", x.shape)
         v_out = self.value_conv(x)
         v_out = F.pad(v_out, [self.padding, self.padding, self.padding, self.padding], value=0)
         v_out = self.unfold2D(v_out)
-        # print("v_out: ", v_out.shape)
         v_out = v_out[:, :, ::self.final_stride, ::self.final_stride, :, :]
-        # print("v_out: ", v_out.shape)
         v_out = v_out.reshape(b, self.out_channels, h, w, -1).permute(0, 2, 3, 1, 4)
         out = torch.matmul(v_out, s).squeeze(-1).permute(0, 3, 1, 2)
         return self.out_op(out, x)
@@ -164,17 +152,13 @@ class AttentionConv(nn.Module):
 
     def forward(self, x):
         batch, channels, height, width = x.size()
-        # print("x: ", x.shape)
         padded_x = F.pad(x, [self.padding, self.padding, self.padding, self.padding])
-        # print("padded_x: ", padded_x.shape)
         q_out = self.query_conv(x)
         k_out = self.key_conv(padded_x)
         v_out = self.value_conv(padded_x)
 
-        k_out = self.unfold2D(
-            k_out)  # .unfold(2, self.dilated_kernel_size, self.stride).unfold(3, self.dilated_kernel_size, self.stride)
-        v_out = self.unfold2D(
-            v_out)  # .unfold(2, self.dilated_kernel_size, self.stride).unfold(3, self.dilated_kernel_size, self.stride)
+        k_out = self.unfold2D(k_out)
+        v_out = self.unfold2D(v_out)
 
         k_out_h, k_out_w = k_out.split(self.out_channels // 2, dim=1)
         k_out = torch.cat((k_out_h + self.rel_h, k_out_w + self.rel_w), dim=1)
@@ -191,7 +175,6 @@ class AttentionConv(nn.Module):
         return out
 
     def unfold2D(self, x):
-        # print(x.shape, self.dilated_att_kernel_size)
         return x.unfold(2, self.dilated_kernel_size, self.stride) \
                    .unfold(3, self.dilated_kernel_size, self.stride)[:, :, :, :, ::self.dilation, ::self.dilation]
 

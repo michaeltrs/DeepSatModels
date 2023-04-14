@@ -75,8 +75,6 @@ if __name__ == "__main__":
     parser.add_argument('--rootdir', required=True, help='data root directory')
     parser.add_argument('--numworkers', type=int, default='4', help='number of parallel processes')
     opt = parser.parse_args()
-    # rootdir = "/media/michaeltrs/184c4903-8b24-4311-a391-84e554e0d240/SatelliteImagery/MTLCC"
-    # numworkers = 10
 
     data = glob(os.path.join(opt.rootdir, "data_IJGI18/datasets/full/240/data16/*.tfrecord.gz"))
     data = pd.DataFrame(["/".join(d.split("/")[-6:]) for d in data])

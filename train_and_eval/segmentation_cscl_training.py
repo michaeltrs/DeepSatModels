@@ -40,8 +40,6 @@ def train_and_evaluate(net, dataloaders, config, device):
         net.eval()
         with torch.no_grad():
             for step, sample in enumerate(evalloader):
-                # evalloader = dataloaders['eval']
-                # sample = next(iter(evalloader))
                 if step % 100 == 0:
                     print("Eval step %d of %d" % (step, Neval))
         
@@ -116,7 +114,6 @@ def train_and_evaluate(net, dataloaders, config, device):
     loss_fn = {'all': get_loss(config, device, reduction='none'),
                'mean': get_loss(config, device, reduction="mean")}
     
-    # optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
     optimizer = optim.Adam(net.parameters(), lr=lr)
     optimizer.zero_grad()
     
@@ -128,9 +125,7 @@ def train_and_evaluate(net, dataloaders, config, device):
     net.train()
     for epoch in range(start_epoch, start_epoch + num_epochs):  # loop over the dataset multiple times
         for step, sample in enumerate(dataloaders['train']):
-            # epoch, step = 1, 1
-            # trainiter = iter(dataloaders['train'])
-            # sample = next(trainiter)
+
             abs_step = start_global + (epoch - start_epoch) * num_steps_train + step
 
             logits, ground_truth, loss = train_step(net, sample, loss_fn, optimizer, device,
@@ -188,12 +183,6 @@ if __name__ == "__main__":
     gpu_ids = opt.gpu_ids
     config_file = opt.config_file
 
-    # config_file = 'configs/MTLCC/UNet3Df_CSCL.yaml'
-    # # config_file = 'configs/MTLCC/UNet2D_CLSTM_CSCL.yaml'
-    # #
-    # gpu_ids = ['0', '1']
-
-    # -----------------------------------------------------------
     device_ids = [int(i) for i in gpu_ids if i.isnumeric()]
     device = get_device(device_ids, allow_cpu=False)
 

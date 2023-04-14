@@ -196,7 +196,3 @@ if __name__ == "__main__":
                     device=device).to(device)
     input_tensor = torch.rand((10, 12, 20, 48, 48)).to(device)
     out = model(input_tensor)
-
-    # iter = model.parameters()
-    # for par in iter:
-    #    print(par.shape, par.device)

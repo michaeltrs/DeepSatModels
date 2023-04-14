@@ -1,9 +1,6 @@
 from __future__ import print_function, division
-from skimage import io, transform
 import numpy as np
 import torch
-import matplotlib.pyplot as plt
-from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
 from torchvision import transforms, utils
 from copy import deepcopy
@@ -77,21 +74,14 @@ class ToTensor(object):
     items out : x10, x20, x60, day, year, labels
     """
     def __call__(self, sample):
-        # print(sample.keys())
-        # print([sample[key].shape for key in ['B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07', 'B08', 'B09', 'B10', 'B11', 'B12', 'labels']])
-        # print([sample[key] for key in ['doy', 'year', 'labels']])
         if 'B01' in sample.keys():
-            # x10 = ['B04', 'B03', 'B02', 'B08']
-            # x20 = ['B05', 'B06', 'B07', 'B8A', 'B11', 'B12']
-            # x60 = ['B01', 'B09', 'B10']
             x10 = torch.stack([torch.tensor(sample[key].astype(np.float32)) for key in ['B04', 'B03', 'B02', 'B08']]).permute(1, 2, 3, 0)
             x20 = torch.stack([torch.tensor(sample[key].astype(np.float32)).type(torch.float32) for key in ['B05', 'B06', 'B07', 'B8A', 'B11', 'B12']]).permute(1, 2, 3, 0)
             x60 = torch.stack([torch.tensor(sample[key].astype(np.float32)) for key in ['B01', 'B09', 'B10']]).permute(1, 2, 3, 0)
             doy = torch.tensor(np.array(sample['doy']).astype(np.float32))
-            year = torch.tensor(0.).repeat(len(sample['doy'])) + 2016 # np.array(sample['year']).astype(np.float32) always 0 in MTLCC_prev
-            labels = torch.tensor(sample['labels'].astype(np.float32)).unsqueeze(dim=0).unsqueeze(dim=-1)#.permute(1, 2, 3, 0)
+            year = torch.tensor(0.).repeat(len(sample['doy'])) + 2016
+            labels = torch.tensor(sample['labels'].astype(np.float32)).unsqueeze(dim=0).unsqueeze(dim=-1)
             sample = {"x10": x10, "x20": x20, "x60": x60, "day": doy, "year": year, "labels": labels}
-            # print([("read", key, sample[key].shape) for key in sample.keys()])
             return sample
         # else:
         sample['x10'] = torch.tensor(sample['x10']).type(torch.float32)
@@ -102,7 +92,6 @@ class ToTensor(object):
         sample['labels'] = torch.unsqueeze(
             torch.from_numpy(sample['labels'].astype(np.int64)),
             dim=-1)
-        # print([("read", key, sample[key].shape) for key in sample.keys()])
         return sample
 
 
@@ -181,7 +170,6 @@ class Rescale(object):
         return sample
 
     def rescale(self, image):
-        # t, h, w, c = image.shape
         img = image.permute(0, 3, 1, 2)  # put height and width in front
         img = F.upsample(img, size=(self.new_h, self.new_w), mode='bilinear')
         img = img.permute(0, 2, 3, 1)  # move back
@@ -201,9 +189,7 @@ class OneHotDates(object):
         self.N = N
 
     def __call__(self, sample):
-        #print(sample['day'].shape)
         sample['day'] = self.doy_to_bin(sample['day'])
-        #print(sample['day'].shape)
         return sample
     
     def doy_to_bin(self, doy):
@@ -232,12 +218,8 @@ class TileDates(object):
         self.doy_bins = doy_bins
 
     def __call__(self, sample):
-        #print("day before repeat: ", sample['day'].shape)
         sample['day'] = self.repeat(sample['day'], binned=self.doy_bins is not None)
-        #print("day after repeat: ", sample['day'].shape)
-        #print("year before repeat: ", sample['year'].shape)
         sample['year'] = self.repeat(sample['year'], binned=False)
-        #print("year after repeat: ", sample['year'].shape)
         return sample
     
     def repeat(self, tensor, binned=False):
@@ -259,7 +241,6 @@ class Concat(object):
         self.concat_keys = concat_keys
         
     def __call__(self, sample):
-        # print([("conc", key, sample[key].shape) for key in sample.keys()])
         inputs = torch.cat([sample[key] for key in self.concat_keys], dim=-1)
         sample["inputs"] = inputs
         sample = {key: sample[key] for key in sample.keys() if key not in self.concat_keys}
@@ -412,7 +393,6 @@ class AddEdgeLabel(object):
     
     def __call__(self, sample):
         labels = sample['labels'].permute(2, 0, 1)[0]
-        # print(labels.shape)
         edge_labels = self.get_edge_labels(labels)
         sample['edge_labels'] = edge_labels
         return sample
@@ -424,11 +404,8 @@ class AddEdgeLabel(object):
         lto = torch.nn.functional.pad(
             lto.unsqueeze(0).unsqueeze(0), [self.pad_size, self.pad_size, self.pad_size, self.pad_size], 'reflect')[
             0, 0]
-        # print("lto: ", lto.shape)
         patches = lto.unfold(self.axes[0], self.nb_size, self.stride).unfold(self.axes[1], self.nb_size, self.stride)
         patches = patches.reshape(-1, self.nb_size ** 2)
-        # print("patches: ", patches.shape)
-        # print("patches repeat: ", patches[:, 0].unsqueeze(-1).repeat(1, self.nb_size ** 2).shape)
         edge_map = (patches != patches[:, 0].unsqueeze(-1).repeat(1, self.nb_size ** 2)).any(dim=1).reshape(W, H).to(
             torch.bool)
         return edge_map
@@ -455,8 +432,6 @@ class EqualIntBoundPoints(object):
         kn_int = unk_masks & (~edge_labels)
         Nint = kn_int.sum()
         if Nint > Nbound:
-            # if (self.N is None) or (self.N < Nbound):
-            # kn_bound_ = kn_bound.reshape(-1)
             kn_int_ = kn_int.reshape(-1)
             kn_int_idx = torch.arange(0, kn_int_.shape[0])[kn_int_]
             kn_int_idx = kn_int_idx[torch.randperm(kn_int_idx.shape[0])][:Nbound]
@@ -506,13 +481,10 @@ class AddCSCLLabels(object):
 
         self.center_idx = kernel_size // 2
         self.add_mask = add_mask
-        # self.dilated_kernel_size = (kernel_size - 1) * kernel_dilation + 1
-        # print("dilated win size: ", self.dilated_kernel_size)
         self.pad_size = self.final_kernel_size // 2
 
     def __call__(self, sample):
         labels = sample['labels'].permute(2, 0, 1)[0][::self.first_stride, ::self.first_stride]
-        # labels = sample['labels'].permute(2, 0, 1)[0]
 
         labels = F.pad(labels, (self.pad_size, self.pad_size, self.pad_size, self.pad_size), value=self.pad_value)
         windows = labels.unfold(0, self.final_kernel_size, self.final_stride).unfold(
@@ -534,7 +506,6 @@ class AddCSCLLabels(object):
             background_mask_other = F.pad(sample['unk_masks'].clone().squeeze(-1),
                                           (self.pad_size, self.pad_size, self.pad_size, self.pad_size),
                                           value=False)
-            # print(background_mask_other.shape)
             background_mask_other = background_mask_other.\
                 unfold(0, self.kernel_size, self.kernel_stride).unfold(1, self.kernel_size, self.kernel_stride)
             sample['cscl_labels_mask'] = mask.to(torch.bool) & background_mask_self & background_mask_other
@@ -542,43 +513,40 @@ class AddCSCLLabels(object):
         return sample
 
 
-# class AddCSSLLabels(object):
-#     """
-#     Remap labels from original values to new consecutive integers
-#     items in  : x10, x20, x60, day, year, labels
-#     items out : x10, x20, x60, day, year, labels
-#     """
-#
-#     def __init__(self, global_attn=False, win_size=None, win_stride=1, pad_size=1, pad_value=100):
-#         self.global_attn = global_attn
-#         self.win_size = win_size
-#         self.win_stride = win_stride
-#         self.pad_size = pad_size
-#         self.pad_value = pad_value
-#         self.center_idx = win_size // 2
-#
-#     def __call__(self, sample):
-#         ### ALSO unfold unk masks to mask SAL
-#
-#         # h = w = 24
-#         # labels = torch.randint(0, 10, size=(h, w))
-#         # https://en.wikipedia.org/wiki/Logical_matrix
-#         labels = sample['labels'].permute(2, 0, 1)[0]
-#         h0, w0 = labels.shape
-#         # print(labels.shape)
-#         if self.global_attn:
-#             assert self.win_size == h0 == w0, "window size should equal tensor dimensions"
-#             labels = labels.reshape(-1, 1)
-#             is_same = (labels.transpose(1, 0).repeat(h0 * w0, 1) == labels.repeat(1, h0 * w0)) \
-#                 .reshape(h0, w0, h0, w0).to(torch.float32)
-#         else:
-#             labels = F.pad(labels, (self.pad_size, self.pad_size, self.pad_size, self.pad_size), value=self.pad_value)
-#             windows = labels.unfold(0, self.win_size, self.win_stride).unfold(1, self.win_size, self.win_stride)
-#             h1, w1, h2, w2 = windows.shape
-#             windows_q = windows[:, :, self.center_idx, self.center_idx].unsqueeze(-1).unsqueeze(-1)
-#             windows_k = windows.reshape(h1, w1, 1, h2 * w2)
-#             is_same = (windows_q.repeat(1, 1, 1, h2 * w2) == windows_k).to(torch.float32).reshape(h1, w1, h2, w2)
-#
-#         sample['sameclass_labels'] = is_same
-#
-#         return sample
+class AddCSSLLabels(object):
+    """
+    Remap labels from original values to new consecutive integers
+    items in  : x10, x20, x60, day, year, labels
+    items out : x10, x20, x60, day, year, labels
+    """
+
+    def __init__(self, global_attn=False, win_size=None, win_stride=1, pad_size=1, pad_value=100):
+        self.global_attn = global_attn
+        self.win_size = win_size
+        self.win_stride = win_stride
+        self.pad_size = pad_size
+        self.pad_value = pad_value
+        self.center_idx = win_size // 2
+
+    def __call__(self, sample):
+        ### ALSO unfold unk masks to mask SAL
+        # https://en.wikipedia.org/wiki/Logical_matrix
+        labels = sample['labels'].permute(2, 0, 1)[0]
+        h0, w0 = labels.shape
+        # print(labels.shape)
+        if self.global_attn:
+            assert self.win_size == h0 == w0, "window size should equal tensor dimensions"
+            labels = labels.reshape(-1, 1)
+            is_same = (labels.transpose(1, 0).repeat(h0 * w0, 1) == labels.repeat(1, h0 * w0)) \
+                .reshape(h0, w0, h0, w0).to(torch.float32)
+        else:
+            labels = F.pad(labels, (self.pad_size, self.pad_size, self.pad_size, self.pad_size), value=self.pad_value)
+            windows = labels.unfold(0, self.win_size, self.win_stride).unfold(1, self.win_size, self.win_stride)
+            h1, w1, h2, w2 = windows.shape
+            windows_q = windows[:, :, self.center_idx, self.center_idx].unsqueeze(-1).unsqueeze(-1)
+            windows_k = windows.reshape(h1, w1, 1, h2 * w2)
+            is_same = (windows_q.repeat(1, 1, 1, h2 * w2) == windows_k).to(torch.float32).reshape(h1, w1, h2, w2)
+
+        sample['sameclass_labels'] = is_same
+
+        return sample

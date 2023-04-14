@@ -11,10 +11,8 @@ def load_from_checkpoint(net, checkpoint, partial_restore=False, device=None):
         checkpoint = max(glob.iglob(checkpoint + '/*.pth'), key=os.path.getctime)
         print("loading model from %s" % checkpoint)
         saved_net = torch.load(checkpoint)
-        #net.load_state_dict(saved_net, strict=True)
     elif os.path.isfile(checkpoint):
         print("loading model from %s" % checkpoint)
-        # saved_net = torch.load(checkpoint)
         if device is None:
             saved_net = torch.load(checkpoint)
         else:
@@ -24,11 +22,7 @@ def load_from_checkpoint(net, checkpoint, partial_restore=False, device=None):
     
     if partial_restore:
         net_dict = net.state_dict()
-        # 1. filter out unnecessary keys
-        # if False:  # config['CHECKPOINT']['ger2sen']:
         saved_net = {k: v for k, v in saved_net.items() if (k in net_dict) and (k not in ["linear_out.weight", "linear_out.bias"])}
-        # else:
-        #     saved_net = {k: v for k, v in saved_net.items() if k in net_dict}
         print("params to keep from checkpoint:")
         print(saved_net.keys())
         extra_params = {k: v for k, v in net_dict.items() if k not in saved_net}
@@ -36,9 +30,7 @@ def load_from_checkpoint(net, checkpoint, partial_restore=False, device=None):
         print(extra_params.keys())
         for param in extra_params:
             saved_net[param] = net_dict[param]
-        # 2. overwrite entries in the existing state dict
-        #net_dict.update(pretrained_net)
-    
+
     net.load_state_dict(saved_net, strict=True)
     return checkpoint
 

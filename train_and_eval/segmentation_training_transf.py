@@ -187,22 +187,18 @@ def train_and_evaluate(net, dataloaders, config, device, lin_cls=False):
 
 if __name__ == "__main__":
 
-    # parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-    # parser.add_argument('--config', help='configuration (.yaml) file to use')
-    # parser.add_argument('--device', default='0,1', type=str,
-    #                      help='gpu ids to use')
-    # parser.add_argument('--lin', action='store_true',
-    #                      help='train linear classifier only')
-    #
-    # args = parser.parse_args()
-    # config_file = args.config
-    # print(args.device)
-    # device_ids = [int(d) for d in args.device.split(',')]
-    # lin_cls = args.lin
+    parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
+    parser.add_argument('--config', help='configuration (.yaml) file to use')
+    parser.add_argument('--device', default='0,1', type=str,
+                         help='gpu ids to use')
+    parser.add_argument('--lin', action='store_true',
+                         help='train linear classifier only')
 
-    config_file = 'configs/PASTIS24/TSViT_fold1.yaml'
-    device_ids = [0, 1]
-    lin_cls = False
+    args = parser.parse_args()
+    config_file = args.config
+    print(args.device)
+    device_ids = [int(d) for d in args.device.split(',')]
+    lin_cls = args.lin
 
     device = get_device(device_ids, allow_cpu=False)
 

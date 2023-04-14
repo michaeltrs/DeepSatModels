@@ -155,49 +155,8 @@ class S2parser():
 
             return sess.run(feature_op)
 
-def test():
-    print("Running self test:")
-    print("temporary tfrecord file is written with random numbers")
-    print("tfrecord file is read back")
-    print("contents are compared")
-
-    filename="tmptile.tfrecord"
-
-    # create dummy dataset
-    x10 = (np.random.rand(6,48,48,6)*1e3).astype(np.int64)
-    x20 = (np.random.rand(6,24,24,6)*1e3).astype(np.int64)
-    x60 = (np.random.rand(6,7,7,6)*1e3).astype(np.int64)
-    labels = (np.random.rand(6,24,24)*1e3).astype(np.int64)
-    doy = (np.random.rand(6)*1e3).astype(np.int64)
-    year = (np.random.rand(6)*1e3).astype(np.int64)
-
-    # init parser
-    parser=S2parser()
-
-    parser.write(filename, x10,x20,x60,doy, year,labels)
-
-    x10_, x20_, x60_, doy_, year_, labels_ = read_and_return(filename)
-
-    # test if wrote and read data is the same
-    print("TEST")
-    if np.all(x10_==x10) and np.all(x20_==x20) and np.all(x60_==x60) and np.all(labels_==labels) and np.all(doy_==doy) and np.all(year_==year):
-        print("PASSED")
-    else:
-        print("NOT PASSED")
-
-
-    # remove file
-    os.remove(filename)
-
-    #return tf.reshape(x10, (1,48,48,6))
-    #return feature['x10shape']
-
-
 if __name__=='__main__':
-   
-    #test()
 
-    #x10, x20, x60, doy, year, labels = read_and_return("data/bavaria/1.tfrecord")
     parser = S2parser()
 
-    parser.tfrecord_to_pickle("1.tfrecord","1.pkl")
+    parser.tfrecord_to_pickle("1.tfrecord", "1.pkl")

@@ -45,7 +45,6 @@ class SatImDataset(Dataset):
             self.data_paths = pd.read_csv(csv_file, header=None)
         elif type(csv_file) in [list, tuple]:
             self.data_paths = pd.concat([pd.read_csv(csv_file_, header=None) for csv_file_ in csv_file], axis=0).reset_index(drop=True)
-        # print(self.data_paths.tail())
         self.root_dir = root_dir
         self.transform = transform
         self.multilabel = multilabel

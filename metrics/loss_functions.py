@@ -22,11 +22,6 @@ def get_loss(config, device, reduction='mean'):
             loss_fun.append(get_loss(config_, device, reduction=reduction))
         return loss_fun
 
-    # # SoftSAL Cross-Entropy Loss -----------------------------------------------------------
-    # if loss_config['loss_function'] == 'softsal_cross_entropy':
-    #     mean = reduction == 'mean'
-    #     return MaskedCrossEntropyLoss(mean=mean), nn.BCEWithLogitsLoss(reduction=reduction)
-
     # Contrastive Loss -----------------------------------------------------------------------
     if loss_config['loss_function'] in ['contrastive_loss', 'masked_contrastive_loss']:
         pos_weight = get_params_values(config['SOLVER'], 'pos_weight', 1.0)
@@ -92,9 +87,6 @@ def per_class_loss(criterion, logits, labels, unk_masks, n_classes):
     return np.nan_to_num(class_loss, nan=0.0), class_counts
 
 
-# criterion = MaskedCrossEntropyLoss(mean=False)
-# idx.sum()
-
 class MaskedContrastiveLoss(torch.nn.Module):
     def __init__(self, pos_weight=1, reduction="mean"):
         """
@@ -117,7 +109,6 @@ class MaskedContrastiveLoss(torch.nn.Module):
             target = ground_truth[0]
             mask = ground_truth[1].to(torch.float32)
 
-        # target = 1 - target
         loss = - self.pos_weight * target * logits + (1 - target) * logits
         if mask is not None:
             loss = mask * loss
@@ -211,11 +202,7 @@ class MaskedFocalLoss(nn.Module):
         self.reduction = reduction
 
     def forward(self, logits, ground_truth):
-        # if input.dim() > 2:
-        #     input = input.view(input.size(0), input.size(1), -1)  # N,C,H,W => N,C,H*W
-        #     input = input.transpose(1, 2)  # N,C,H*W => N,H*W,C
-        #     input = input.contiguous().view(-1, input.size(2))  # N,H*W,C => N*H*W,C
-        # logits = outputs
+
         if type(ground_truth) == torch.Tensor:
             target = ground_truth
             mask = None
@@ -269,11 +256,7 @@ class MaskedDiceLoss(nn.Module):
         self.reduction = reduction
 
     def forward(self, logits, ground_truth):
-        # if input.dim() > 2:
-        #     input = input.view(input.size(0), input.size(1), -1)  # N,C,H,W => N,C,H*W
-        #     input = input.transpose(1, 2)  # N,C,H*W => N,H*W,C
-        #     input = input.contiguous().view(-1, input.size(2))  # N,H*W,C => N*H*W,C
-        # logits = outputs
+
         if type(ground_truth) == torch.Tensor:
             target = ground_truth
             mask = None
@@ -352,8 +335,3 @@ class FocalLoss(nn.Module):
         else:
             raise ValueError(
                 "FocalLoss: reduction parameter not in list of acceptable values [\"mean\", \"sum\", None]")
-
-# if __name__ == "__main__":
-#     logits = outputs
-#     target = labels
-#     mask = unk_masks

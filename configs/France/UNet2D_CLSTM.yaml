@@ -39,6 +39,6 @@ CHECKPOINT:
   restart_clock: True
   partial_restore: True
   save_path: "models/saved_models/France/UNET2D_CLSTM"
-  train_metrics_steps: 2 #000
+  train_metrics_steps: 1000
   eval_steps: 4000
   save_steps: 8000

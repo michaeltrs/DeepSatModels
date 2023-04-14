@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.metrics import accuracy_score, confusion_matrix, cohen_kappa_score, classification_report, jaccard_score
+from sklearn.metrics import confusion_matrix
 
 
 def confusion_mat(predicted, labels, n_classes):  # , unk_masks=None):
@@ -8,9 +8,7 @@ def confusion_mat(predicted, labels, n_classes):  # , unk_masks=None):
             -----------------
     labels |
     """
-    #if unk_masks is not None:
-    #    predicted = predicted[unk_masks]
-    #    labels = labels[unk_masks]
+
     cm = confusion_matrix(labels, predicted)
     # cm_side = cm.shape[0]
     rem = 0
@@ -26,7 +24,7 @@ def confusion_mat(predicted, labels, n_classes):  # , unk_masks=None):
                     i += 1
             # outer class(es) missing
             else:
-                diff = n_classes - rem - len(batch_classes)  # + 1
+                diff = n_classes - rem - len(batch_classes)
                 cm_side = cm.shape[0]
                 cm = np.concatenate((cm, np.zeros((diff, cm_side))), axis=0)
                 cm = np.concatenate((cm, np.zeros((cm_side + diff, diff))), axis=1)
@@ -34,28 +32,17 @@ def confusion_mat(predicted, labels, n_classes):  # , unk_masks=None):
     return cm
 
 
-def get_prediction_splits(predicted, labels, n_classes):  # , unk_masks=None):  , per_class=False):
-    # if per_class:
-    #     TP, FP, TN, FN = get_prediction_metrics(predicted, labels, unk_mask=unk_mask, per_class=True)
-    # else:
-    #     TP, FP, TN, FN = get_prediction_metrics(predicted, labels, unk_mask=unk_mask, per_class=False)
-    
-    # TN = (allsum - rowsum - colsum + diag).astype(np.float32)
-    # ---------------------------------------------------------
+def get_prediction_splits(predicted, labels, n_classes):
     cm = confusion_mat(predicted, labels, n_classes).astype(np.float32)
     diag = np.diagonal(cm)
     rowsum = cm.sum(axis=1)
     colsum = cm.sum(axis=0)
-    # allsum = cm.sum()
     TP = (diag).astype(np.float32)
     FN = (rowsum - diag).astype(np.float32)
     FP = (colsum - diag).astype(np.float32)
     IOU = diag / (rowsum + colsum - diag)
     macro_IOU = diag.sum() / (rowsum.sum() + colsum.sum() - diag.sum())
-    # ---------------------------------------------------------
-    #if unk_masks is not None:
-    #    predicted = predicted[unk_masks]
-    #    labels = labels[unk_masks]
+
     num_total = []
     num_correct = []
     for class_ in range(n_classes):
@@ -67,15 +54,11 @@ def get_prediction_splits(predicted, labels, n_classes):  # , unk_masks=None):  
         num_correct.append(is_correct.sum())   # previously was .mean()
     num_total = np.array(num_total).astype(np.float32)
     num_correct = np.array(num_correct)
-    #if not per_class:
-    #    return TP.sum(), FP.sum(), FN.sum(), num_correct.sum(), num_total.sum(), IOU[~np.isnan(IOU)].mean()
+
     return TP, FP, FN, num_correct, num_total, IOU, macro_IOU
 
 
-def get_splits(predicted, labels, n_classes):  # , unk_masks=None, per_class=False):
-    #if unk_masks is not None:
-    #    predicted = predicted[unk_masks]
-    #    labels = labels[unk_masks]
+def get_splits(predicted, labels, n_classes):
     num_total = []
     num_correct = []
     for class_ in range(n_classes):
@@ -84,9 +67,7 @@ def get_splits(predicted, labels, n_classes):  # , unk_masks=None, per_class=Fal
         num_correct.append((predicted[idx] == labels[idx]).mean())
     num_total = np.array(num_total)
     num_correct = np.array(num_correct)
-    #if per_class:
     return num_correct, num_total
-    #return num_correct.sum(), num_total.sum()
 
 
 def get_metrics_from_splits(TP, FP, FN, num_correct, num_total):

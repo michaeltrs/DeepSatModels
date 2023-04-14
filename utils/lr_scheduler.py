@@ -28,24 +28,6 @@ def build_scheduler(config, optimizer, n_iter_per_epoch):
             cycle_limit=int(config['SOLVER']['num_cycles']),
             t_in_epochs=False,
         )
-    elif config['SOLVER']['lr_scheduler'] == 'linear':
-        lr_scheduler = LinearLRScheduler(
-            optimizer,
-            t_initial=num_steps,
-            lr_min_rate=0.01,
-            warmup_lr_init=config['SOLVER']['lr_start'],
-            warmup_t=warmup_steps,
-            t_in_epochs=False,
-        )
-    # elif config['SOLVER']['lr_scheduler'].NAME == 'step':
-    #     lr_scheduler = StepLRScheduler(
-    #         optimizer,
-    #         decay_t=decay_steps,
-    #         decay_rate=config['SOLVER']['lr_decay'],
-    #         warmup_lr_init=config['SOLVER']['lr_start'],
-    #         warmup_t=warmup_steps,
-    #         t_in_epochs=False,
-    #     )
 
     return lr_scheduler
 

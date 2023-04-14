@@ -54,6 +54,6 @@ CHECKPOINT:
   load_from_checkpoint:
   partial_restore: False
   save_path: 'models/saved_models/France/Classification/TSViTcls'
-  train_metrics_steps: 2  # 500
-  eval_steps: 4 # 4000
+  train_metrics_steps: 1000
+  eval_steps: 4000
   save_steps: 1000000
