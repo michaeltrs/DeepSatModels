@@ -22,3 +22,7 @@
 - Utilize a distinct ".yaml" configuration file for each experiment. Example files can be found in the "configs" folder. These files contain default values corresponding to parameters used in the associated studies.
 - Adjust the ".yaml" configuration files as needed to train with your custom data.
 - Refer to the instructions provided in the specific README.MD files for additional guidance on setting up and running your experiments.
+
+## Papers
+- [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://arxiv.org/abs/2301.04944) (CVPR 2023). More information in README_TSVIT.md.
+- [Context-self contrastive pretraining for crop type semantic segmentation](https://ieeexplore.ieee.org/document/9854891) (IEEE Transactions on Geoscience and Remote Sensing). More information in README_CSCL.md.
