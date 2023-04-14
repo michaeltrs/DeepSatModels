@@ -2,8 +2,8 @@
 
 ## Featured Papers
 The following papers are featured in this repository:
-- [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://arxiv.org/abs/2301.04944) (CVPR 2023). More information in README_TSVIT.md.
-- [Context-self contrastive pretraining for crop type semantic segmentation](https://ieeexplore.ieee.org/document/9854891) (IEEE Transactions on Geoscience and Remote Sensing). More information in README_CSCL.md.
+- [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://arxiv.org/abs/2301.04944) (CVPR 2023). More information in [README_TSVIT.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_TSVIT.md).
+- [Context-self contrastive pretraining for crop type semantic segmentation](https://ieeexplore.ieee.org/document/9854891) (IEEE Transactions on Geoscience and Remote Sensing). More information in [README_CSCL.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_CSCL.md).
 
 ## Setting up a python environment
 - Follow the instruction in https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html for downloading and installing Miniconda
