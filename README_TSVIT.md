@@ -1,5 +1,5 @@
 # [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://arxiv.org/abs/2301.04944) (CVPR 2023)
-[supp material](https://drive.google.com/file/d/1WAbNkfu1ko5uMS0e8GnKyzqroRUwNrRZ/view?usp=sharing)
+- [download supp. material here](https://drive.google.com/file/d/1WAbNkfu1ko5uMS0e8GnKyzqroRUwNrRZ/view?usp=sharing)
 
 ## Model training and evaluation
 Modify respective .yaml config files accordingly to define the save directory or loading a pre-trained model from pre-trained checkpoints. 
