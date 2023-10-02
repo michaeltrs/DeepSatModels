@@ -28,3 +28,7 @@ The following papers are featured in this repository:
 - Adjust the ".yaml" configuration files as needed to train with your custom data.
 - Refer to the instructions provided in the specific README.MD files for additional guidance on setting up and running your experiments.
 
+## License
+This project is licensed under the Apache License 2.0 - see [LICENSE](https://github.com/michaeltrs/DeepSatModels/blob/main/LICENSE.txt) file for details.
+
+Copyright © 2023 Michail Tarasiou
