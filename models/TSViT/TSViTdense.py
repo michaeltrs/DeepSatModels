@@ -149,6 +149,8 @@ class TSViT_single_token(nn.Module):
         x = x.reshape(B, -1, T, self.dim)
         x += temporal_pos_embedding.unsqueeze(1)
         x = x.reshape(-1, T, self.dim)
+        cls_temporal_tokens = repeat(self.temporal_token, '() () d -> b t d', b=B * self.num_patches_1d ** 2, t=1)
+        x = torch.cat((cls_temporal_tokens, x), dim=1)
         x = self.temporal_transformer(x)
         x = x.mean(dim=1) if self.pool == 'mean' else x[:, 0]
         x = x.reshape(B, self.num_patches_1d**2, self.dim)
@@ -571,7 +573,8 @@ if __name__ == "__main__":
 
     # model = TViT(model_config).cuda()
     # model = STViT(model_config)#.cuda()
-    model = TSViT_global_attention_spatial_encoder(model_config)#.cuda()
+    # model = TSViT_global_attention_spatial_encoder(model_config)#.cuda()
+    model = TSViT_single_token(model_config)
 
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     parameters = sum([np.prod(p.size()) for p in parameters]) / 1_000_000

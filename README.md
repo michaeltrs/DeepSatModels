@@ -1,34 +1,43 @@
-# Repository for training land cover recognition models for satellite imagery
+# Repository for Land Cover Recognition Model Training Using Satellite Imagery
 
-## Featured Papers
-The following papers are featured in this repository:
-- [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://arxiv.org/abs/2301.04944) (CVPR 2023). More information in [README_TSVIT.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_TSVIT.md).
-- [Context-self contrastive pretraining for crop type semantic segmentation](https://ieeexplore.ieee.org/document/9854891) (IEEE Transactions on Geoscience and Remote Sensing). More information in [README_CSCL.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_CSCL.md).
+Welcome to the dedicated repository for advancing land cover recognition through the application of state-of-the-art models on satellite imagery. This repository serves as a comprehensive resource for researchers and practitioners in the field, providing access to research code, detailed setup instructions, and guidelines for conducting experiments with satellite image timeseries data.
 
-## Setting up a python environment
-- Follow the instruction in https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html for downloading and installing Miniconda
+## Featured Research Publications
 
-- Open a terminal in the code directory
+This repository highlights contributions to the field through the following research publications:
 
-- Create an environment using the .yml file:
+- [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://openaccess.thecvf.com/content/CVPR2023/html/Tarasiou_ViTs_for_SITS_Vision_Transformers_for_Satellite_Image_Time_Series_CVPR_2023_paper.html) - Featured at CVPR 2023, this paper explores the application of Vision Transformers to Satellite Image Time Series analysis. For further details, please consult the [README_TSVIT.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_TSVIT.md) document.
+- [Context-self contrastive pretraining for crop type semantic segmentation](https://ieeexplore.ieee.org/abstract/document/9854891) - 
+Published in IEEE Transactions on Geoscience and Remote Sensing, this work introduces a novel supervised pretraining method for semantic segmentation 
+of crop types exhibiti performance gains along object boundaries. Additional information is available in the [README_CSCL.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_CSCL.md) document.
+
+## Environment Setup
+
+### Installation of Miniconda
+For the initial setup, please follow the instructions for downloading and installing Miniconda available at the [official Conda documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html).
+
+### Environment Configuration
+1. **Creating the Environment**: Navigate to the code directory in your terminal and create the environment using the provided `.yml` file by executing:
 
         conda env create -f deepsatmodels_env.yml
 
-- Activate the environment:
+2. **Activating the Environment**: Activate the newly created environment with:
 
-	    source activate deepsatmodels   
+        source activate deepsatmodels
 
-- Install required version of torch:
+3. **PyTorch Installation**: Install the required version of PyTorch along with torchvision and torchaudio by running:
 
-	    conda install pytorch torchvision torchaudio cudatoolkit=10.1 -c pytorch-nightly
+        conda install pytorch torchvision torchaudio cudatoolkit=10.1 -c pytorch-nightly
 
-## Initial steps for setting up experiments
-- Specify the base directory and paths for the training and evaluation files in the "data/datasets.yaml" file.
-- Utilize a distinct ".yaml" configuration file for each experiment. Example files can be found in the "configs" folder. These files contain default values corresponding to parameters used in the associated studies.
-- Adjust the ".yaml" configuration files as needed to train with your custom data.
-- Refer to the instructions provided in the specific README.MD files for additional guidance on setting up and running your experiments.
 
-## License
-This project is licensed under the Apache License 2.0 - see [LICENSE](https://github.com/michaeltrs/DeepSatModels/blob/main/LICENSE.txt) file for details.
+## Experiment Setup
 
-Copyright © 2023 Michail Tarasiou
+- **Configuration**: Specify the base directory and paths for training and evaluation datasets within the `data/datasets.yaml` file.
+- **Experiment Configuration**: Use a distinct `.yaml` file for each experiment, located in the `configs` folder. These configuration files encapsulate default parameters aligned with those used in the featured research. Modify these `.yaml` files as necessary to accommodate custom datasets.
+- **Guidance on Experiments**: For detailed instructions on setting up and conducting experiments, refer to the specific README.MD files associated with each paper or dataset.
+
+## License and Copyright
+
+This project is made available under the Apache License 2.0. Please see the [LICENSE](https://github.com/michaeltrs/DeepSatModels/blob/main/LICENSE.txt) file for detailed licensing information.
+
+Copyright © 2023 by Michail Tarasiou
