@@ -1,4 +1,4 @@
-# ViTs for SITS: Vision Transformers for Satellite Image Time Series (CVPR 2023)
+# ViTs for SITS: Vision Transformers for Satellite Image Time Series
 
 This repository provides the implementation and datasets for the paper 
 [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://openaccess.thecvf.com/content/CVPR2023/html/Tarasiou_ViTs_for_SITS_Vision_Transformers_for_Satellite_Image_Time_Series_CVPR_2023_paper.html) 
